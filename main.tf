@@ -154,7 +154,7 @@ data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
 }
 
 data "azurerm_log_analytics_workspace" "log_analytics" {
-  provider = "azurerm.data"
+  provider = azurerm.data
 
   name                = "hmcts-${var.oms_env}"
   resource_group_name = "oms-automation"
