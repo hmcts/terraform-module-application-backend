@@ -35,3 +35,5 @@ variable "private_ip_address" {
 }
 
 variable "oms_env" {}
+
+variable "workspace_id" {}
