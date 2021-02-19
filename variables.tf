@@ -36,8 +36,6 @@ variable "private_ip_address" {
 
 variable "oms_env" {}
 
-variable "workspace_id" {}
-
 variable "appgwbackends" {}
 
 variable "log_analytics_workspace_id" {}
