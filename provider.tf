@@ -1,5 +1,5 @@
-provider "azurerm" {
-  features {}
-  alias = "data"
+// provider "azurerm" {
+//  features {}
+//  alias = "data"
 
-}
+//} 
