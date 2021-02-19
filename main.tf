@@ -153,12 +153,6 @@ data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
   resource_id = azurerm_application_gateway.ag[0].id
 }
 
-/* data "azurerm_log_analytics_workspace" "log_analytics" {
-  provider = azurerm.data
-  name                = "hmcts-${var.oms_env}"
-  resource_group_name = "oms-automation"
-} */
-
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
   count                      = length(var.appgwbackends) != 0 ? 1 : 0
