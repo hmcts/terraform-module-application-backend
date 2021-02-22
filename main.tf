@@ -153,11 +153,6 @@ data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
   resource_id = azurerm_application_gateway.ag[0].id
 }
 
-module "logworkspace" {
-  source      = "git::https://github.com/hmcts/terraform-module-log-analytics-workspace-id.git?ref=master"
-  environment = var.environment
-}
-
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
   count                      = length(local.gateways)
