@@ -153,14 +153,18 @@ data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
   resource_id = azurerm_application_gateway.ag[0].id
 }
 
+module "logworkspace" {
+  source      = "git::https://github.com/hmcts/terraform-module-log-analytics-workspace-id.git?ref=master"
+  environment = var.environment
+}
+
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
-  count                      = length(var.frontends) != 0 ? 1 : 0
+  count                      = length(local.gateways)
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
-  log_analytics_workspace_id = var.log_analytics_workspace_id
-
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
   dynamic "log" {
-    for_each = [for category in data.azurerm_monitor_diagnostic_categories.diagnostic_categories[0].logs : {
+    for_each = [for category in data.azurerm_monitor_diagnostic_categories.diagnostic_categories.logs : {
       category = category
     }]
 
