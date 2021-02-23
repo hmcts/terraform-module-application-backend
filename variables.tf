@@ -48,7 +48,7 @@ variable "key_vault_resource_group" {
   type        = string
 }
 
-variable common_tags {
+variable "common_tags" {
   description = "Common Tags"
   type        = map(string)
 }
