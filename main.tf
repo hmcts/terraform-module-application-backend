@@ -21,7 +21,7 @@ resource "azurerm_application_gateway" "ag" {
   name                = "aks${format("%02d", count.index)}-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
-  tags                = local.tags
+  tags                = var.common_tags
 
   count = length(local.gateways)
 
