@@ -43,6 +43,11 @@ variable "vnet_name" {
   type        = string
 }
 
+variable "key_vault_resource_group" {
+  description = "Name of the resource group for the keyvault"
+  type        = string
+}
+
 variable "oms_env" {}
 
 variable "log_analytics_workspace_id" {}
