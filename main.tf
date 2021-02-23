@@ -8,7 +8,7 @@ data "local_file" "configuration" {
 
 data "azurerm_key_vault" "certificate_vault" {
   name                = var.vault_name
-  resource_group_name = var.key_vault_resource_group
+  resource_group_name = var.vnet_rg
 }
 
 data "azurerm_key_vault_secret" "certificate" {
