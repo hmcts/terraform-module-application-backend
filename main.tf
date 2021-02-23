@@ -8,15 +8,13 @@ data "local_file" "configuration" {
 
 data "azurerm_key_vault" "certificate_vault" {
   name                = var.vault_name
-  resource_group_name = var.env == "perftest" || var.env == "aat" ? "core-infra-${var.subscription}-rg" : "core-infra-${var.env}-rg"
-  # provider            = azurerm.data
+  resource_group_name = var.key_vault_resource_group
 }
 
 data "azurerm_key_vault_secret" "certificate" {
   count        = length(local.gateways)
   name         = local.gateways[count.index].gateway_configuration.certificate_name
   key_vault_id = data.azurerm_key_vault.certificate_vault.id
-  # provider     = azurerm.data
 }
 
 resource "azurerm_application_gateway" "ag" {

@@ -1,7 +1,6 @@
 data "azurerm_key_vault" "main" {
   name                = var.vault_name
   resource_group_name = "core-infra-${var.subscription}-rg"
-  # provider            = azurerm.data
 }
 
 resource "azurerm_key_vault_secret" "test" {
