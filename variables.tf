@@ -48,6 +48,11 @@ variable "key_vault_resource_group" {
   type        = string
 }
 
+variable common_tags {
+  description = "Common Tags"
+  type        = map(string)
+}
+
 variable "oms_env" {}
 
 variable "log_analytics_workspace_id" {}
