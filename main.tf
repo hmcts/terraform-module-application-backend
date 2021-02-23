@@ -16,6 +16,7 @@ data "azurerm_key_vault_secret" "certificate" {
   count        = length(local.gateways)
   name         = local.gateways[count.index].gateway_configuration.certificate_name
   key_vault_id = data.azurerm_key_vault.certificate_vault.id
+  provider     = azurerm.data
 }
 
 resource "azurerm_application_gateway" "ag" {
