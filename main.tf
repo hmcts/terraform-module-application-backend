@@ -8,7 +8,7 @@ data "local_file" "configuration" {
 
 data "azurerm_key_vault" "certificate_vault" {
   name                = var.vault_name
-  resource_group_name = var.env == "perftest" || var.env == "aat" ? "core-infra-${var.subscription}-rg" : "core-infra-${var.env}-rg"
+  resource_group_name = var.key_vault_resource_group
 }
 
 data "azurerm_key_vault_secret" "certificate" {
@@ -19,9 +19,9 @@ data "azurerm_key_vault_secret" "certificate" {
 
 resource "azurerm_application_gateway" "ag" {
   name                = "aks${format("%02d", count.index)}-${var.env}-agw"
-  resource_group_name = local.vnet_rg
+  resource_group_name = var.vnet_rg
   location            = var.location
-  tags                = local.tags
+  tags                = var.common_tags
 
   count = length(local.gateways)
 
@@ -75,10 +75,10 @@ resource "azurerm_application_gateway" "ag" {
 
   dynamic "probe" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
-      name          = app.product-app.component
+      name          = "${app.product}-${app.component}"
       path          = lookup(app, "health_path_override", "/health/liveness")
-      host_name     = app.product-app.component-var.env.local.gateways[count.index].gateway_configuration.host_name_suffix
-      ssl_host_name = app.product-app.component.local.gateways[count.index].gateway_configuration.ssl_host_name_suffix
+      host_name     = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
+      ssl_host_name = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
       ssl_enabled   = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
     }]
 
@@ -157,7 +157,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
   count                      = length(local.gateways)
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_analytics.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
   dynamic "log" {
     for_each = [for category in data.azurerm_monitor_diagnostic_categories.diagnostic_categories.logs : {
       category = category

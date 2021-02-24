@@ -1,6 +1,6 @@
 data "azurerm_key_vault" "main" {
   name                = var.vault_name
-  resource_group_name = "core-infra-${var.subscription}-rg"
+  resource_group_name = var.key_vault_resource_group
 }
 
 resource "azurerm_key_vault_secret" "test" {
@@ -8,5 +8,5 @@ resource "azurerm_key_vault_secret" "test" {
   value        = var.private_ip_address
   key_vault_id = data.azurerm_key_vault.main.id
 
-  tags = local.tags
+  tags = var.common_tags
 }

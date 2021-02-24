@@ -34,6 +34,25 @@ variable "private_ip_address" {
   description = "IP address to allocate staticly to app gateway, must be in the subnet for the env"
 }
 
+variable "vnet_rg" {
+  description = "Name of the virtual Network resource group"
+  type        = string
+}
+variable "vnet_name" {
+  description = "Name of the Virtual Network"
+  type        = string
+}
+
+variable "key_vault_resource_group" {
+  description = "Name of the resource group for the keyvault"
+  type        = string
+}
+
+variable "common_tags" {
+  description = "Common Tags"
+  type        = map(string)
+}
+
 variable "oms_env" {}
 
 variable "log_analytics_workspace_id" {}
