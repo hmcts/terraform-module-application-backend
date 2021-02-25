@@ -77,7 +77,7 @@ resource "azurerm_application_gateway" "ag" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name          = "${app.product}-${app.component}"
       path          = lookup(app, "health_path_override", "/health/liveness")
-      host = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
+      host = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
     }]
 
     content {
