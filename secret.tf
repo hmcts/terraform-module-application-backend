@@ -9,5 +9,5 @@ resource "azurerm_key_vault_secret" "test" {
   value        = element(var.private_ip_address, count.index)
   key_vault_id = data.azurerm_key_vault.main.id
 
-  tags = local.tags
+  tags = var.common_tags
 }
