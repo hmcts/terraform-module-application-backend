@@ -1,12 +1,13 @@
 data "azurerm_key_vault" "main" {
   name                = var.vault_name
-  resource_group_name = var.key_vault_resource_group
+  resource_group_name = "core-infra-${var.subscription}-rg"
 }
 
 resource "azurerm_key_vault_secret" "test" {
-  name         = "internal-lb-ip"
-  value        = var.private_ip_address
+  count        = length(var.private_ip_address)
+  name         = element(var.private_ip_address, count.index) == var.private_ip_address[0] ? "internal-lb-ip" : "internal-lb-ip-${count.index}"
+  value        = element(var.private_ip_address, count.index)
   key_vault_id = data.azurerm_key_vault.main.id
 
-  tags = var.common_tags
+  tags = local.tags
 }
