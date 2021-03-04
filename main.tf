@@ -121,7 +121,7 @@ resource "azurerm_application_gateway" "ag" {
       host_name            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
       ssl_host_name        = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
       ssl_enabled          = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
-      ssl_certificate_name = "${local.gateways[count.index].gateway_configuration.certificate_name}"
+      ssl_certificate_name = local.gateways[count.index].gateway_configuration.certificate_name
     }]
 
     content {
@@ -158,7 +158,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   count                      = length(local.gateways)
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
   log_analytics_workspace_id = var.log_analytics_workspace_id
-
   dynamic "log" {
     for_each = [for category in data.azurerm_monitor_diagnostic_categories.diagnostic_categories.logs : {
       category = category
