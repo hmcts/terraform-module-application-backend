@@ -52,13 +52,13 @@ resource "azurerm_application_gateway" "ag" {
 
   frontend_ip_configuration {
     name                 = "appGwPublicFrontendIp"
-    public_ip_address_id = azurerm_public_ip.app_gw.id
+    public_ip_address_id = element(azurerm_public_ip.app_gw.*.id, count.index)
   }
 
   frontend_ip_configuration {
     name                          = "appGwPrivateFrontendIp"
     subnet_id                     = data.azurerm_subnet.app_gw.id
-    private_ip_address            = var.private_ip_address
+    private_ip_address            = element(var.private_ip_address, count.index)
     private_ip_address_allocation = "Static"
   }
 
@@ -118,8 +118,8 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "http_listener" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name                 = "${app.product}-${app.component}"
-      host_name            = "${app.product}-${app.component}-${var.env}.${local.gateways[count.index].gateway_configuration.host_name_suffix}"
-      ssl_host_name        = "${app.product}-${app.component}.${local.gateways[count.index].gateway_configuration.ssl_host_name_suffix}"
+      host_name            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
+      ssl_host_name        = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
       ssl_enabled          = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
       ssl_certificate_name = local.gateways[count.index].gateway_configuration.certificate_name
     }]

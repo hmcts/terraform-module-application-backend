@@ -56,5 +56,3 @@ variable "common_tags" {
 variable "oms_env" {}
 
 variable "log_analytics_workspace_id" {}
-
-variable "frontends" {}
