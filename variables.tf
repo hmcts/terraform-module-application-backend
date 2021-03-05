@@ -10,10 +10,6 @@ variable "env" {
   description = "environment, will be used in resource names and for looking up the vnet details"
 }
 
-variable "subscription" {
-  description = "subscription, will be used for looking up the keyvault details"
-}
-
 variable "vault_name" {
   description = "vault name"
 }
@@ -52,7 +48,5 @@ variable "common_tags" {
   description = "Common Tags"
   type        = map(string)
 }
-
-variable "oms_env" {}
 
 variable "log_analytics_workspace_id" {}
