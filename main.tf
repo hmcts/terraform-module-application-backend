@@ -150,7 +150,8 @@ resource "azurerm_application_gateway" "ag" {
 }
 
 data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
-  resource_id = azurerm_application_gateway.ag[0].id
+  resource_id = element(azurerm_public_ip.app_gw.*.id, count.index)
+  count       = length(local.gateways)
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
