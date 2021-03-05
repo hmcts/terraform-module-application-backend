@@ -150,7 +150,7 @@ resource "azurerm_application_gateway" "ag" {
 }
 
 data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
-  resource_id = element(azurerm_application_gateway.ag[count.index].id)
+  resource_id = azurerm_application_gateway.ag[count.index].id
   count       = length(local.gateways)
 }
 
