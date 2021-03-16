@@ -68,7 +68,7 @@ resource "azurerm_application_gateway" "ag" {
     content {
       interval            = 10
       name                = probe.value.name
-      host_name           = probe.value.ssl_enabled ? probe.value.ssl_host_name : probe.value.exclude_env_in_app_name ? probe.value.host_name_exclude_env : probe.value.host_name_include_env
+      host                = probe.value.ssl_enabled ? probe.value.ssl_host_name : probe.value.exclude_env_in_app_name ? probe.value.host_name_exclude_env : probe.value.host_name_include_env
       path                = probe.value.path
       protocol            = "Http"
       timeout             = 15
