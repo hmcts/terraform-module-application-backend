@@ -62,7 +62,7 @@ resource "azurerm_application_gateway" "ag" {
       host_name_exclude_env            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
       ssl_host_name = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
       ssl_enabled   = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
-      exclude_env_in_app_name          = contains(keys(app), "exclude_env_in_app_name") ? app.exclude_env_in_app_name : false
+      exclude_env_in_app_name          = lookup(local.gateways[count.index].gateway_configuration, "exclude_env_in_app_name", false)
     }]
 
     content {
