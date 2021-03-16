@@ -58,15 +58,17 @@ resource "azurerm_application_gateway" "ag" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name          = "${app.product}-${app.component}"
       path          = lookup(app, "health_path_override", "/health/liveness")
-      host_name     = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
+      host_name_include_env            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
+      host_name_exclude_env            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
       ssl_host_name = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
       ssl_enabled   = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
+      exclude_env_in_app_name          = contains(keys(app), "exclude_env_in_app_name") ? app.exclude_env_in_app_name : false
     }]
 
     content {
       interval            = 10
       name                = probe.value.name
-      host                = probe.value.ssl_enabled ? probe.value.ssl_host_name : probe.value.host_name
+      host_name           = probe.value.ssl_enabled ? probe.value.ssl_host_name : probe.value.exclude_env_in_app_name ? probe.value.host_name_exclude_env : probe.value.host_name_include_env
       path                = probe.value.path
       protocol            = "Http"
       timeout             = 15
@@ -99,10 +101,12 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "http_listener" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name                 = "${app.product}-${app.component}"
-      host_name            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
+      host_name_include_env            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
+      host_name_exclude_env            = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
       ssl_host_name        = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
       ssl_enabled          = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
       ssl_certificate_name = local.gateways[count.index].gateway_configuration.certificate_name
+      exclude_env_in_app_name          = contains(keys(app), "exclude_env_in_app_name") ? app.exclude_env_in_app_name : false
     }]
 
     content {
@@ -110,7 +114,7 @@ resource "azurerm_application_gateway" "ag" {
       frontend_ip_configuration_name = "appGwPrivateFrontendIp"
       frontend_port_name             = http_listener.value.ssl_enabled ? "https" : "http"
       protocol                       = http_listener.value.ssl_enabled ? "Https" : "Http"
-      host_name                      = http_listener.value.ssl_enabled ? http_listener.value.ssl_host_name : http_listener.value.host_name
+      host_name                      = http_listener.value.ssl_enabled ? http_listener.value.ssl_host_name : http_listener.value.exclude_env_in_app_name ? http_listener.value.host_name_exclude_env : http_listener.value.host_name_include_env
       ssl_certificate_name           = http_listener.value.ssl_enabled ? http_listener.value.ssl_certificate_name : ""
     }
   }
