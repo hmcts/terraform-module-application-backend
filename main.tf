@@ -122,7 +122,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "http_listener" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name      = "${app.product}-${app.component}-redirect"
-      host_name = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), "${local.gateways[count.index].gateway_configuration.host_name_suffix}"])
+      host_name = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
       }
       if lookup(app, "http_to_https_redirect", false) == true
     ]
