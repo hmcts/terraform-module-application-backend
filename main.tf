@@ -92,10 +92,13 @@ resource "azurerm_application_gateway" "ag" {
     }
   }
 
+  identity {
+    identity_ids = [azurerm_user_assigned_identity.identity.id]
+  }
+
   ssl_certificate {
     name     = local.gateways[count.index].gateway_configuration.certificate_name
-    data     = data.azurerm_key_vault_secret.certificate[count.index].value
-    password = ""
+    key_vault_secret_id     = data.azurerm_key_vault_secret.certificate[count.index].versionless_id
   }
 
   dynamic "http_listener" {
@@ -181,6 +184,8 @@ resource "azurerm_application_gateway" "ag" {
       redirect_configuration_name = request_routing_rule.value.name
     }
   }
+
+  depends_on = [azurerm_role_assignment.identity]
 }
 
 data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
