@@ -1,9 +1,0 @@
-
-resource "azurerm_key_vault_secret" "test" {
-  count        = length(var.private_ip_address)
-  name         = element(var.private_ip_address, count.index) == var.private_ip_address[0] ? "internal-lb-ip" : "internal-lb-ip-${count.index}"
-  value        = element(var.private_ip_address, count.index)
-  key_vault_id = data.azurerm_key_vault.main.id
-
-  tags = var.common_tags
-}
