@@ -10,3 +10,4 @@ gateways:
         ssl_enabled: true
       - product: draft-store2
         component: service
+        ssl_enabled: true
