@@ -2,6 +2,8 @@ resource "azurerm_user_assigned_identity" "identity" {
   name                = "aks-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
+
+  tags = var.common_tags
 }
 
 data "azurerm_client_config" "current" {}
