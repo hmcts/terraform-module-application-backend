@@ -50,3 +50,8 @@ variable "common_tags" {
 }
 
 variable "log_analytics_workspace_id" {}
+
+variable "availability_zones" {
+  description = "Availability Zones"
+  default     = []
+}
