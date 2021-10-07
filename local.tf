@@ -1,4 +1,4 @@
 locals {
-  gateways = yamldecode(data.local_file.configuration.content).gateways
-  # regions_with_availability_zones = ["UK South", "West Europe", "North Europe"]
+  gateways                  = yamldecode(data.local_file.configuration.content).gateways
+  enable_availability_zones = var.availability_zones != null ? 1 : 0
 }
