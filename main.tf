@@ -3,7 +3,7 @@ resource "azurerm_application_gateway" "ag" {
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
-  zones               = contains(local.regions_with_availability_zones, var.location) ? list("1", "2", "3") : null
+  zones               = contains(lvar.availability_zones) ? list("1", "2", "3") : null
 
   count = length(local.gateways)
 
