@@ -53,6 +53,6 @@ variable "log_analytics_workspace_id" {}
 
 variable "availability_zones" {
   description = "List of availability Zones"
-  type = string
+  type        = any
   default     = null
 }
