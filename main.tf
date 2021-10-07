@@ -3,8 +3,9 @@ resource "azurerm_application_gateway" "ag" {
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
-  zones               = var.enable_availability_zones == true ? var.availability_zones : false
-  count               = length(local.gateways)
+  zones               = var.availability_zones
+
+  count = length(local.gateways)
 
   sku {
     name = "Standard_v2"
