@@ -56,3 +56,5 @@ variable "availability_zones" {
   type        = list(any)
   default     = []
 }
+
+availability_zones = []
