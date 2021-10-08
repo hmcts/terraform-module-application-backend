@@ -57,6 +57,6 @@ variable "availability_zones" {
   default     = []
 }
 
-variable "enable_multiple_availability_zones" {
-  default = false
-}
+# variable "enable_multiple_availability_zones" {
+#   default = false
+# }
