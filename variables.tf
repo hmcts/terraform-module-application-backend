@@ -51,12 +51,6 @@ variable "common_tags" {
 
 variable "log_analytics_workspace_id" {}
 
-# variable "availability_zones" {
-#   description = "List of availability Zones"
-#   type        = list(any)
-#   default     = []
-# }
-
 variable "enable_multiple_availability_zones" {
   default = false
 }
