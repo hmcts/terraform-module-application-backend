@@ -6,4 +6,6 @@ resource "azurerm_public_ip" "app_gw" {
   resource_group_name = var.vnet_rg
   sku                 = "Standard"
   allocation_method   = "Static"
+
+  tags = var.common_tags
 }
