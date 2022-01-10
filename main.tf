@@ -8,8 +8,8 @@ resource "azurerm_application_gateway" "ag" {
   count = length(local.gateways)
 
   sku {
-    name = "Standard_v2"
-    tier = "Standard_v2"
+    name = var.sku_name
+    tier = var.sku_tier
   }
 
   autoscale_configuration {
@@ -42,6 +42,13 @@ resource "azurerm_application_gateway" "ag" {
     subnet_id                     = data.azurerm_subnet.app_gw.id
     private_ip_address            = element(var.private_ip_address, count.index)
     private_ip_address_allocation = "Static"
+  }
+
+  waf_configuration {
+    enabled          = var.enabled_waf
+    firewall_mode    = var.waf_mode
+    rule_set_type    = "OWASP"
+    rule_set_version = "3.1"
   }
 
   dynamic "backend_address_pool" {
@@ -185,6 +192,8 @@ resource "azurerm_application_gateway" "ag" {
       redirect_configuration_name = request_routing_rule.value.name
     }
   }
+
+  
 
   depends_on = [azurerm_role_assignment.identity]
 }

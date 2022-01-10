@@ -18,6 +18,16 @@ variable "location" {
   description = "location to deploy resources to"
 }
 
+variable "sku_name" {
+  description = "name of the SKU to use for Application Gateway"
+  default     = "Standard_v2"
+}
+
+variable "sku_tier" {
+  description = "tier of the SKU to use for Application Gateway"
+  default     = "Standard_v2"
+}
+
 variable "min_capacity" {
   default = 2
 }
@@ -42,6 +52,15 @@ variable "vnet_name" {
 variable "key_vault_resource_group" {
   description = "Name of the resource group for the keyvault"
   type        = string
+}
+
+variable "enable_waf" {
+  default = false
+}
+
+variable "waf_mode" {
+  description = "Mode for waf to run in"
+  default = "Detection"
 }
 
 variable "common_tags" {
