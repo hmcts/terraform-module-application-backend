@@ -49,6 +49,11 @@ variable "vnet_name" {
   type        = string
 }
 
+variable "subnet_name" {
+  description = "Name of the subnet"
+  default = "aks-appgw"
+}
+
 variable "key_vault_resource_group" {
   description = "Name of the resource group for the keyvault"
   type        = string

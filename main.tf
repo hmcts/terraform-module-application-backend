@@ -45,7 +45,7 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   waf_configuration {
-    enabled          = var.enabled_waf
+    enabled          = var.enable_waf
     firewall_mode    = var.waf_mode
     rule_set_type    = "OWASP"
     rule_set_version = "3.1"
@@ -194,8 +194,6 @@ resource "azurerm_application_gateway" "ag" {
       redirect_configuration_name = request_routing_rule.value.name
     }
   }
-
-  
 
   depends_on = [azurerm_role_assignment.identity]
 }
