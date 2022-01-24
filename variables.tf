@@ -18,6 +18,11 @@ variable "location" {
   description = "location to deploy resources to"
 }
 
+variable "usage_name" {
+  description = "describes usage of app gateway, for use in naming resources"
+  default     = "aks"
+}
+
 variable "sku_name" {
   description = "name of the SKU to use for Application Gateway"
   default     = "Standard_v2"
