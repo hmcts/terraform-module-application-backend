@@ -49,6 +49,17 @@ resource "azurerm_application_gateway" "ag" {
     firewall_mode    = var.waf_mode
     rule_set_type    = "OWASP"
     rule_set_version = "3.1"
+
+    dynamic "exclusion" {
+      iterator = exclusion
+      for_each = lookup(each.value, "global_exclusions", [])
+
+      content {
+        match_variable        = exclusion.value.match_variable
+        select_match_operator = exclusion.value.operator
+        selector              = exclusion.value.selector
+      }
+    }
   }
 
   dynamic "backend_address_pool" {
