@@ -69,7 +69,8 @@ resource "azurerm_application_gateway" "ag" {
 
     content {
       name         = backend_address_pool.value.name
-      ip_addresses = var.backend_pool_ip_addresses
+      ip_addresses = var.backend_pool_ip_addresses != [] ? var.backend_pool_ip_addresses : []
+      fqdns        = var.backend_pool_fqdns != [] ? var.backend_pool_fqdns : []
     }
   }
 
