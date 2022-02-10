@@ -6,6 +6,11 @@ variable "backend_pool_ip_addresses" {
   description = "list of ip addresses to add to the backend pool"
 }
 
+variable "backend_pool_fqdns" {
+  description = "list of fqdns to add to the backend pool"
+  default     = []
+}
+
 variable "env" {
   description = "environment, will be used in resource names and for looking up the vnet details"
 }
