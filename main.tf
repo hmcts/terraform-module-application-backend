@@ -52,12 +52,12 @@ resource "azurerm_application_gateway" "ag" {
 
     dynamic "exclusion" {
       iterator = exclusion
-      for_each = lookup(each.value, "global_exclusions", [])
+      for_each = lookup(var.exclusions, "exclusions", {})
 
       content {
-        match_variable        = exclusion.value.match_variable
-        select_match_operator = exclusion.value.operator
-        selector              = exclusion.value.selector
+        match_variable          = exclusion.value.match_variable
+        selector_match_operator = exclusion.value.operator
+        selector                = exclusion.value.selector
       }
     }
   }

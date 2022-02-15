@@ -88,3 +88,11 @@ variable "log_analytics_workspace_id" {}
 variable "enable_multiple_availability_zones" {
   default = false
 }
+
+variable "exclusions" {
+  type = set(object({
+    match_variable = string
+    operator       = string
+    selector       = string
+  }))
+}
