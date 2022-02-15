@@ -52,7 +52,7 @@ resource "azurerm_application_gateway" "ag" {
 
     dynamic "exclusion" {
       iterator = exclusion
-      for_each = lookup(local.exclusions, "exclusions", {})
+      for_each = lookup(local.exclusions, "exclusions", [])
 
       content {
         match_variable          = exclusion.value.match_variable
