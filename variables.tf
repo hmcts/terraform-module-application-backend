@@ -55,7 +55,7 @@ variable "enable_multiple_availability_zones" {
   default = false
 }
 
-variable "create_new_agw" {
-  description = "Create resources with new naming convention"
-  default = false
+variable "resource_prefix" {
+  description = "Optional name prefix for resources"
+  default = ""
 }
