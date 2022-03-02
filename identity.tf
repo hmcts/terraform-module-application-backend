@@ -1,5 +1,5 @@
 resource "azurerm_user_assigned_identity" "identity" {
-  name                = "aks-${var.env}-agw"
+  name                = (var.create_new_agw == true) ? "aks-${var.env}-appgw" : "aks-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
 
