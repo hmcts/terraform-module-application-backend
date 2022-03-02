@@ -54,3 +54,8 @@ variable "log_analytics_workspace_id" {}
 variable "enable_multiple_availability_zones" {
   default = false
 }
+
+variable "create_new_agw" {
+  description = "Create resources with new naming convention"
+  default = false
+}

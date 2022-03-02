@@ -1,5 +1,5 @@
 resource "azurerm_application_gateway" "ag" {
-  name                = "aks${format("%02d", count.index)}-${var.env}-agw"
+  name                = (var.create_new_agw == true) ? "aks${format("%02d", count.index)}-backend-${var.env}-agw" : "aks${format("%02d", count.index)}-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
