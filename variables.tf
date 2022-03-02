@@ -57,5 +57,6 @@ variable "enable_multiple_availability_zones" {
 
 variable "resource_prefix" {
   description = "Optional name prefix for resources"
-  default = ""
+  type        = string
+  default     = null
 }
