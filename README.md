@@ -18,6 +18,7 @@ No requirements.
 |------|-------------|------|---------|:--------:|
 | backend_pool_ip_addresses | List of ip addresses to add to the backend pool | `any` | n/a | yes |
 | common\_tags | Common Tags | `map(string)` | n/a | yes |
+| enable\_multiple\_availability_zones | Create application gateway with multiple availability zones | `boolean` | false | no |
 | env | environment, will be used in resource names and for looking up the vnet details | `any` | n/a | yes |
 | key_vault_resource_group | Name of the resource group for the keyvault | `string` | n/a | yes |
 | location | location to deploy resources to | `any` | n/a | yes |
