@@ -5,6 +5,7 @@ data "local_file" "configuration" {
 
 
 data "azurerm_subnet" "app_gw" {
+  provider             = azurerm.hub
   name                 = var.subnet_name
   resource_group_name  = var.vnet_rg
   virtual_network_name = var.vnet_name
