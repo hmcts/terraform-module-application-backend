@@ -116,6 +116,7 @@ resource "azurerm_application_gateway" "ag" {
 
   identity {
     identity_ids = [azurerm_user_assigned_identity.identity.id]
+    type         = "UserAssigned"
   }
 
   ssl_certificate {
