@@ -30,12 +30,12 @@ variable "usage_name" {
 
 variable "sku_name" {
   description = "name of the SKU to use for Application Gateway"
-  default     = "Standard_v2"
+  default     = "WAF_v2"
 }
 
 variable "sku_tier" {
   description = "tier of the SKU to use for Application Gateway"
-  default     = "Standard_v2"
+  default     = "WAF_v2"
 }
 
 variable "min_capacity" {
