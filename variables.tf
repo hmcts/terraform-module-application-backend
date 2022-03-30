@@ -70,7 +70,7 @@ variable "key_vault_resource_group" {
 }
 
 variable "enable_waf" {
-  default = false
+  default = true
 }
 
 variable "waf_mode" {
