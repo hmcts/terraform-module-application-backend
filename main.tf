@@ -161,7 +161,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "request_routing_rule" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
       name     = "${app.product}-${app.component}"
-      priority = app.priority
+      priority = tostring((index(app) + 1) * 10)
     }]
 
     content {
