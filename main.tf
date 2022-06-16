@@ -166,7 +166,7 @@ resource "azurerm_application_gateway" "ag" {
     content {
       name                       = request_routing_rule.value.name
       rule_type                  = "Basic"
-      priority                   = tostring((index + 1) * 10)
+      priority                   = tostring((index(app) + 1) * 10)
       http_listener_name         = request_routing_rule.value.name
       backend_address_pool_name  = request_routing_rule.value.name
       backend_http_settings_name = request_routing_rule.value.name
