@@ -77,7 +77,7 @@ resource "azurerm_application_gateway" "ag" {
 
       match {
         body = "Healthy"
-        status_code = [200-399]
+        status_code = ["200-399"]
       }
     }
   }
