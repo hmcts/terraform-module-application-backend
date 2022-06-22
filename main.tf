@@ -71,7 +71,6 @@ resource "azurerm_application_gateway" "ag" {
       name                = probe.value.name
       host                = probe.value.ssl_enabled ? probe.value.ssl_host_name : probe.value.exclude_env_in_app_name ? probe.value.host_name_exclude_env : probe.value.host_name_include_env
       path                = probe.value.path
-      port                = 0
       protocol            = "Http"
       timeout             = 15
       unhealthy_threshold = 3
