@@ -76,8 +76,8 @@ resource "azurerm_application_gateway" "ag" {
       unhealthy_threshold = 3
 
       match {
-        body = ""
-        status_code = "200-399"
+        body = "Healthy"
+        status_code = [200-399]
       }
     }
   }
