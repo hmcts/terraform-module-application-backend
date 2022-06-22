@@ -94,7 +94,7 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.identity.id]
   }
 
@@ -160,7 +160,7 @@ resource "azurerm_application_gateway" "ag" {
 
   dynamic "request_routing_rule" {
     for_each = [for i, app in local.gateways[count.index].app_configuration : {
-      name = "${app.product}-${app.component}"
+      name     = "${app.product}-${app.component}"
       priority = ((i + 1) * 10)
     }]
 
@@ -176,7 +176,7 @@ resource "azurerm_application_gateway" "ag" {
 
   dynamic "request_routing_rule" {
     for_each = [for i, app in local.gateways[count.index].app_configuration : {
-      name = "${app.product}-${app.component}-redirect"
+      name     = "${app.product}-${app.component}-redirect"
       priority = ((i + 1) * 10)
       }
       if lookup(app, "http_to_https_redirect", false) == true
