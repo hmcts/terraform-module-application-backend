@@ -212,4 +212,12 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
       }
     }
   }
+
+  log {
+    category = "ApplicationGatewayAccessLog"
+  }
+
+  log {
+    category = "ApplicationGatewayFirewallLog"
+  }
 }
