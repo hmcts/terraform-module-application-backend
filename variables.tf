@@ -10,9 +10,9 @@ variable "env" {
   description = "environment, will be used in resource names and for looking up the vnet details"
 }
 
-variable "vault_name" {
-  description = "vault name"
-}
+# variable "vault_name" {
+#   description = "vault name"
+# }
 
 variable "location" {
   description = "location to deploy resources to"
