@@ -11,10 +11,10 @@ data "azurerm_subnet" "app_gw" {
 }
 
 
-data "azurerm_key_vault" "main" {
-  name                = var.vault_name
-  resource_group_name = var.key_vault_resource_group
-}
+# data "azurerm_key_vault" "main" {
+#   name                = var.vault_name
+#   resource_group_name = var.key_vault_resource_group
+# }
 
 data "azurerm_key_vault_secret" "certificate" {
   count        = length(local.gateways)

@@ -39,10 +39,10 @@ variable "vnet_name" {
   type        = string
 }
 
-variable "key_vault_resource_group" {
-  description = "Name of the resource group for the keyvault"
-  type        = string
-}
+# variable "key_vault_resource_group" {
+#   description = "Name of the resource group for the keyvault"
+#   type        = string
+# }
 
 variable "key_vault_id" {
   type        = string
