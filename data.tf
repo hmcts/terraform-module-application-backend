@@ -19,5 +19,5 @@ data "azurerm_key_vault" "main" {
 data "azurerm_key_vault_secret" "certificate" {
   count        = length(local.gateways)
   name         = local.gateways[count.index].gateway_configuration.certificate_name
-  key_vault_id = data.azurerm_key_vault.main.id
+  key_vault_id = var.key_vault_id
 }
