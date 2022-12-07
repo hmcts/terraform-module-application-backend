@@ -183,7 +183,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "request_routing_rule" {
     for_each = [for i, app in local.gateways[count.index].app_configuration : {
       name = "${app.product}-${app.component}-redirect"
-      priority = ((i + 1) * 10)
+      priority = (((i + 1) * 10) + 1)
       }
       if lookup(app, "http_to_https_redirect", false) == true
     ]
