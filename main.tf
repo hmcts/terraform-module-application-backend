@@ -191,7 +191,7 @@ resource "azurerm_application_gateway" "ag" {
     content {
       name                        = request_routing_rule.value.name
       priority                    = request_routing_rule.value.priority
-      rule_type                   = "Basic"
+      rule_type                   = "PathBasedRouting"
       http_listener_name          = request_routing_rule.value.name
       redirect_configuration_name = request_routing_rule.value.name
     }
