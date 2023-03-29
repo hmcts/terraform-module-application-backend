@@ -60,3 +60,15 @@ variable "resource_prefix" {
   type        = string
   default     = null
 }
+
+variable "ssl_policy" {
+  description = "Application Gateway SSL configuration"
+  type = object({
+    disabled_protocols   = optional(list(string))
+    policy_type          = optional(string)
+    policy_name          = optional(string)
+    cipher_suites        = optional(list(string))
+    min_protocol_version = optional(string)
+  })
+  default = null
+}
