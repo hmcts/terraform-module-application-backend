@@ -45,9 +45,11 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "backend_address_pool" {
-    for_each = [for app in local.gateways[count.index].app_configuration : {
-      name = "${app.product}-${app.component}"
-    }]
+    for_each = [
+      for app in local.gateways[count.index].app_configuration : {
+        name = "${app.product}-${app.component}"
+      }
+    ]
 
     content {
       name         = backend_address_pool.value.name
@@ -56,15 +58,26 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "probe" {
-    for_each = [for app in local.gateways[count.index].app_configuration : {
-      name                    = "${app.product}-${app.component}"
-      path                    = lookup(app, "health_path_override", "/health/liveness")
-      host_name_include_env   = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
-      host_name_exclude_env   = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
-      ssl_host_name           = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
-      ssl_enabled             = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
-      exclude_env_in_app_name = lookup(local.gateways[count.index].gateway_configuration, "exclude_env_in_app_name", false)
-    }]
+    for_each = [
+      for app in local.gateways[count.index].app_configuration : {
+        name = "${app.product}-${app.component}"
+        path = lookup(app, "health_path_override", "/health/liveness")
+        host_name_include_env = join(".", [
+          lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"),
+          local.gateways[count.index].gateway_configuration.host_name_suffix
+        ])
+        host_name_exclude_env = join(".", [
+          lookup(app, "host_name_prefix", "${app.product}-${app.component}"),
+          local.gateways[count.index].gateway_configuration.host_name_suffix
+        ])
+        ssl_host_name = join(".", [
+          lookup(app, "host_name_prefix", "${app.product}-${app.component}"),
+          local.gateways[count.index].gateway_configuration.ssl_host_name_suffix
+        ])
+        ssl_enabled             = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
+        exclude_env_in_app_name = lookup(local.gateways[count.index].gateway_configuration, "exclude_env_in_app_name", false)
+      }
+    ]
 
     content {
       interval            = 20
@@ -78,10 +91,12 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "backend_http_settings" {
-    for_each = [for app in local.gateways[count.index].app_configuration : {
-      name                  = "${app.product}-${app.component}"
-      cookie_based_affinity = contains(keys(app), "cookie_based_affinity") ? app.cookie_based_affinity : "Disabled"
-    }]
+    for_each = [
+      for app in local.gateways[count.index].app_configuration : {
+        name                  = "${app.product}-${app.component}"
+        cookie_based_affinity = contains(keys(app), "cookie_based_affinity") ? app.cookie_based_affinity : "Disabled"
+      }
+    ]
 
     content {
       name                  = backend_http_settings.value.name
@@ -104,15 +119,26 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "http_listener" {
-    for_each = [for app in local.gateways[count.index].app_configuration : {
-      name                    = "${app.product}-${app.component}"
-      host_name_include_env   = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
-      host_name_exclude_env   = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.host_name_suffix])
-      ssl_host_name           = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
-      ssl_enabled             = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
-      ssl_certificate_name    = local.gateways[count.index].gateway_configuration.certificate_name
-      exclude_env_in_app_name = lookup(local.gateways[count.index].gateway_configuration, "exclude_env_in_app_name", false)
-    }]
+    for_each = [
+      for app in local.gateways[count.index].app_configuration : {
+        name = "${app.product}-${app.component}"
+        host_name_include_env = join(".", [
+          lookup(app, "host_name_prefix", "${app.product}-${app.component}-${var.env}"),
+          local.gateways[count.index].gateway_configuration.host_name_suffix
+        ])
+        host_name_exclude_env = join(".", [
+          lookup(app, "host_name_prefix", "${app.product}-${app.component}"),
+          local.gateways[count.index].gateway_configuration.host_name_suffix
+        ])
+        ssl_host_name = join(".", [
+          lookup(app, "host_name_prefix", "${app.product}-${app.component}"),
+          local.gateways[count.index].gateway_configuration.ssl_host_name_suffix
+        ])
+        ssl_enabled             = contains(keys(app), "ssl_enabled") ? app.ssl_enabled : false
+        ssl_certificate_name    = local.gateways[count.index].gateway_configuration.certificate_name
+        exclude_env_in_app_name = lookup(local.gateways[count.index].gateway_configuration, "exclude_env_in_app_name", false)
+      }
+    ]
 
     content {
       name                           = http_listener.value.name
@@ -125,9 +151,13 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "http_listener" {
-    for_each = [for app in local.gateways[count.index].app_configuration : {
-      name      = "${app.product}-${app.component}-redirect"
-      host_name = join(".", [lookup(app, "host_name_prefix", "${app.product}-${app.component}"), local.gateways[count.index].gateway_configuration.ssl_host_name_suffix])
+    for_each = [
+      for app in local.gateways[count.index].app_configuration : {
+        name = "${app.product}-${app.component}-redirect"
+        host_name = join(".", [
+          lookup(app, "host_name_prefix", "${app.product}-${app.component}"),
+          local.gateways[count.index].gateway_configuration.ssl_host_name_suffix
+        ])
       }
       if lookup(app, "http_to_https_redirect", false) == true
     ]
@@ -142,9 +172,10 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "redirect_configuration" {
-    for_each = [for app in local.gateways[count.index].app_configuration : {
-      name        = "${app.product}-${app.component}-redirect"
-      target_name = "${app.product}-${app.component}"
+    for_each = [
+      for app in local.gateways[count.index].app_configuration : {
+        name        = "${app.product}-${app.component}-redirect"
+        target_name = "${app.product}-${app.component}"
       }
       if lookup(app, "http_to_https_redirect", false) == true
     ]
@@ -159,10 +190,12 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "request_routing_rule" {
-    for_each = [for i, app in local.gateways[count.index].app_configuration : {
-      name     = "${app.product}-${app.component}"
-      priority = ((i + 1) * 10)
-    }]
+    for_each = [
+      for i, app in local.gateways[count.index].app_configuration : {
+        name     = "${app.product}-${app.component}"
+        priority = ((i + 1) * 10)
+      }
+    ]
 
     content {
       name                       = request_routing_rule.value.name
@@ -175,9 +208,10 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "request_routing_rule" {
-    for_each = [for i, app in local.gateways[count.index].app_configuration : {
-      name     = "${app.product}-${app.component}-redirect"
-      priority = (((i + 1) * 10) + 5)
+    for_each = [
+      for i, app in local.gateways[count.index].app_configuration : {
+        name     = "${app.product}-${app.component}-redirect"
+        priority = (((i + 1) * 10) + 5)
       }
       if lookup(app, "http_to_https_redirect", false) == true
     ]
@@ -206,27 +240,14 @@ resource "azurerm_application_gateway" "ag" {
   depends_on = [azurerm_role_assignment.identity]
 }
 
-data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
-  resource_id = azurerm_application_gateway.ag[0].id
-}
-
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
   count                      = length(local.gateways)
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
-  dynamic "metric" {
-    for_each = [for category in data.azurerm_monitor_diagnostic_categories.diagnostic_categories.metrics : {
-      category = category
-    }]
-
-    content {
-      category = metric.value.category
-      enabled  = true
-      retention_policy {
-        enabled = true
-      }
-    }
+  metric {
+    category = "AllMetrics"
+    enabled  = true
   }
 }
