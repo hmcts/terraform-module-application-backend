@@ -10,6 +10,16 @@ variable "env" {
   description = "environment, will be used in resource names and for looking up the vnet details"
 }
 
+variable "send_access_logs_to_log_analytics" {
+  description = "Send access logs to log analytics workspace, this can be quite expensive on busy instances so disable it and send to Storage account instead"
+  default     = false
+}
+
+variable "diagnostics_storage_account_id" {
+  description = "ID of a storage account to send access logs to."
+  default     = null
+}
+
 variable "vault_name" {
   description = "vault name"
 }
