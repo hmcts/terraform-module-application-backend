@@ -239,15 +239,3 @@ resource "azurerm_application_gateway" "ag" {
 
   depends_on = [azurerm_role_assignment.identity]
 }
-
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
-  name                       = "AppGw"
-  count                      = length(local.gateways)
-  target_resource_id         = azurerm_application_gateway.ag[count.index].id
-  log_analytics_workspace_id = var.log_analytics_workspace_id
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-  }
-}
