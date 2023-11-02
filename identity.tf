@@ -14,3 +14,10 @@ resource "azurerm_role_assignment" "identity" {
 
   role_definition_name = "Key Vault Secrets User"
 }
+
+resource "azurerm_role_assignment" "certificates_access" {
+  principal_id = azurerm_user_assigned_identity.identity.principal_id
+  scope        = data.azurerm_key_vault.main.id
+
+  role_definition_name = "Key Vault Certificates Officer"
+}
