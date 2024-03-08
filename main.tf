@@ -95,6 +95,7 @@ resource "azurerm_application_gateway" "ag" {
       for app in local.gateways[count.index].app_configuration : {
         name                  = "${app.product}-${app.component}"
         cookie_based_affinity = contains(keys(app), "cookie_based_affinity") ? app.cookie_based_affinity : "Disabled"
+        affinity_cookie_name  = contains(keys(app), "affinity_cookie_name") ? app.affinity_cookie_name : null
       }
     ]
 
@@ -102,6 +103,7 @@ resource "azurerm_application_gateway" "ag" {
       name                  = backend_http_settings.value.name
       probe_name            = backend_http_settings.value.name
       cookie_based_affinity = backend_http_settings.value.cookie_based_affinity
+      affinity_cookie_name  = backend_http_settings.value.affinity_cookie_name
       port                  = 80
       protocol              = "Http"
       request_timeout       = 30
