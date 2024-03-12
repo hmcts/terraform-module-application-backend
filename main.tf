@@ -253,13 +253,6 @@ resource "azurerm_application_gateway" "ag" {
         content {
           name          = rewrite_rule.value.name
           rule_sequence = rewrite_rule.value.rule_sequence
-          condition {
-            variable   = rewrite_rule.value.condition.variable
-            operator   = rewrite_rule.value.condition.operator
-            value      = rewrite_rule.value.condition.value
-            negate     = rewrite_rule.value.condition.negate
-            transforms = rewrite_rule.value.condition.transforms
-          }
           request_header_configuration {
             header_name  = rewrite_rule.value.request_header_configuration.header_name
             header_value = rewrite_rule.value.request_header_configuration.header_value
