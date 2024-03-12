@@ -238,6 +238,37 @@ resource "azurerm_application_gateway" "ag" {
     }
   }
 
+dynamic "rewrite_rule_set" {
+  for_each = [for app in local.gateways[count.index].app_configuration : {
+    name            = "${app.product}-${app.component}"
+    rewrite_rules   = contains(keys(app), "rewrite_rule_set") ? app.rewrite_rule_set : []
+  }]
+
+  content {
+    name = rewrite_rule_set.value.name
+
+    dynamic "rewrite_rule" {
+      for_each = rewrite_rule_set.value.rewrite_rules
+
+      content {
+        name            = rewrite_rule.value.name
+        rule_sequence   = rewrite_rule.value.rule_sequence
+        condition {
+          variable   = rewrite_rule.value.condition.variable
+          operator   = rewrite_rule.value.condition.operator
+          value      = rewrite_rule.value.condition.value
+          negate     = rewrite_rule.value.condition.negate
+          transforms = rewrite_rule.value.condition.transforms
+        }
+        request_header_configuration {
+          header_name  = rewrite_rule.value.request_header_configuration.header_name
+          header_value = rewrite_rule.value.request_header_configuration.header_value
+        }
+      }
+    }
+  }
+}
+
 
   depends_on = [azurerm_role_assignment.identity]
 }
