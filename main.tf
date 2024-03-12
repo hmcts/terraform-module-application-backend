@@ -212,8 +212,9 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "request_routing_rule" {
     for_each = [
       for i, app in local.gateways[count.index].app_configuration : {
-        name     = "${app.product}-${app.component}-redirect"
-        priority = (((i + 1) * 10) + 5)
+        name                  = "${app.product}-${app.component}-redirect"
+        rewrite_rule_set_name = contains(keys(app), "rewrite_rule_set") ? "${app.product}-${app.component}" : null
+        priority              = (((i + 1) * 10) + 5)
       }
       if lookup(app, "http_to_https_redirect", false) == true
     ]
@@ -224,6 +225,7 @@ resource "azurerm_application_gateway" "ag" {
       rule_type                   = "Basic"
       http_listener_name          = request_routing_rule.value.name
       redirect_configuration_name = request_routing_rule.value.name
+      rewrite_rule_set_name       = request_routing_rule.value.rewrite_rule_set_name
     }
   }
 
@@ -251,7 +253,7 @@ resource "azurerm_application_gateway" "ag" {
         for_each = rewrite_rule_set.value.rewrite_rules
 
         content {
-          name          = rewrite_rule.value.name
+          name          = rewrite_rule_set.value.name
           rule_sequence = rewrite_rule.value.rule_sequence
           request_header_configuration {
             header_name  = rewrite_rule.value.request_header_configuration.header_name
