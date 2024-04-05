@@ -96,6 +96,7 @@ resource "azurerm_application_gateway" "ag" {
         name                  = "${app.product}-${app.component}"
         cookie_based_affinity = contains(keys(app), "cookie_based_affinity") ? app.cookie_based_affinity : "Disabled"
         affinity_cookie_name  = contains(keys(app), "affinity_cookie_name") ? app.affinity_cookie_name : null
+        request_timeout       = contains(keys(app), "request_timeout") ? app.request_timeout : 30
       }
     ]
 
@@ -106,7 +107,7 @@ resource "azurerm_application_gateway" "ag" {
       affinity_cookie_name  = backend_http_settings.value.affinity_cookie_name
       port                  = 80
       protocol              = "Http"
-      request_timeout       = 30
+      request_timeout       = backend_http_settings.value.request_timeout
     }
   }
 
