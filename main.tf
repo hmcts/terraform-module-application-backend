@@ -243,23 +243,84 @@ resource "azurerm_application_gateway" "ag" {
 
   dynamic "rewrite_rule_set" {
     for_each = [for app in local.gateways[count.index].app_configuration : {
-      name          = "${app.product}-${app.component}"
-      rewrite_rules = contains(keys(app), "rewrite_rule_set") ? app.rewrite_rule_set : []
-    }]
-
+      name          = "${app.product}-${app.component}-rewriterule"
+      rewrite_rules = "${app.rewrite_rules}"
+      }
+      if lookup(app, "add_rewrite_rule", false) == true
+    ]
     content {
       name = rewrite_rule_set.value.name
 
       dynamic "rewrite_rule" {
-        for_each = rewrite_rule_set.value.rewrite_rules
+        for_each = [for rule in rewrite_rule_set.value.rewrite_rules : {
+          name             = "${rule.name}"
+          sequence         = "${rule.sequence}"
+          conditions       = lookup(rule, "conditions", [])
+          request_headers  = lookup(rule, "request_headers", [])
+          url              = contains(keys(rule), "url") ? [rule.url] : []
+          response_headers = lookup(rule, "response_headers", [])
+        }]
 
         content {
-          name          = rewrite_rule_set.value.name
-          rule_sequence = rewrite_rule.value.rule_sequence
-          request_header_configuration {
-            header_name  = rewrite_rule.value.request_header_configuration.header_name
-            header_value = rewrite_rule.value.request_header_configuration.header_value
+          name          = rewrite_rule.value.name
+          rule_sequence = rewrite_rule.value.sequence
+
+          dynamic "condition" {
+            for_each = [for cond in rewrite_rule.value.conditions : {
+              variable    = "${cond.variable}"
+              pattern     = "${cond.pattern}"
+              ignore_case = lookup(cond, "ignore_case", false)
+              negate      = lookup(cond, "negate", false)
+            }]
+
+            content {
+              variable    = condition.value.variable
+              pattern     = condition.value.pattern
+              ignore_case = condition.value.ignore_case
+              negate      = condition.value.negate
+            }
           }
+
+          dynamic "request_header_configuration" {
+            for_each = [for request_header in rewrite_rule.value.request_headers : {
+              header_name  = "${request_header.header_name}"
+              header_value = "${request_header.header_value}"
+            }]
+
+            content {
+              header_name  = request_header_configuration.value.header_name
+              header_value = request_header_configuration.value.header_value
+            }
+          }
+
+          dynamic "url" {
+            for_each = [for the_url in rewrite_rule.value.url : {
+              components   = lookup(the_url, "components", null)
+              path         = lookup(the_url, "path", null)
+              reroute      = lookup(the_url, "reroute", false)
+              query_string = lookup(the_url, "query_string", null)
+            }]
+
+            content {
+              components   = url.value.components
+              path         = url.value.path
+              reroute      = url.value.reroute
+              query_string = url.value.query_string
+            }
+          }
+
+          dynamic "response_header_configuration" {
+            for_each = [for response_header in rewrite_rule.value.response_headers : {
+              header_name  = "${response_header.header_name}"
+              header_value = "${response_header.header_value}"
+            }]
+
+            content {
+              header_name  = response_header_configuration.value.header_name
+              header_value = response_header_configuration.value.header_value
+            }
+          }
+
         }
       }
     }
